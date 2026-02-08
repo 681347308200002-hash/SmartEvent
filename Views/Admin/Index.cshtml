@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1>Admin Dashboard</h1>
+
+<p>Welcome, Admin! You can manage events, bookings, reviews, and guest inquiries from here.</p>
+
+<ul>
+    <li><a asp-controller="Events" asp-action="Index">Manage Events</a> (coming next)</li>
+    <li><a asp-controller="Admin" asp-action="Inquiries">View Guest Inquiries</a> (coming soon)</li>
+    <li><a asp-controller="Admin" asp-action="Users">Manage Users/Roles</a> (optional)</li>
+</ul>
