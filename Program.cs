@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartEvent.Data;
 
@@ -41,10 +41,13 @@ else
     app.UseHsts();
 }
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// ✅ Missing in your file: Authentication must come BEFORE Authorization
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SmartEvent.Models;
 
 namespace SmartEvent.Data
 {
@@ -9,5 +10,9 @@ namespace SmartEvent.Data
             : base(options)
         {
         }
+
+        public DbSet<Event> Events { get; set; }
+        public DbSet<SeatType> SeatTypes { get; set; }
+        public DbSet<Review> Reviews { get; set; }
     }
 }
