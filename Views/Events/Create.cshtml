@@ -5,54 +5,73 @@
 }
 
 <h1>Create</h1>
+@if (TempData["ModelErrors"] != null)
+{
+    <div class="alert alert-danger">
+        <pre>@TempData["ModelErrors"]</pre>
+    </div>
+}
 
 <h4>Event</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+
+            <div class="form-group mb-2">
                 <label asp-for="EventName" class="control-label"></label>
                 <input asp-for="EventName" class="form-control" />
                 <span asp-validation-for="EventName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mb-2">
                 <label asp-for="Category" class="control-label"></label>
                 <input asp-for="Category" class="form-control" />
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mb-2">
                 <label asp-for="EventDate" class="control-label"></label>
-                <input asp-for="EventDate" class="form-control" />
+                <input asp-for="EventDate" class="form-control" type="datetime-local" />
                 <span asp-validation-for="EventDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mb-2">
                 <label asp-for="Location" class="control-label"></label>
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mb-2">
                 <label asp-for="BasePrice" class="control-label"></label>
                 <input asp-for="BasePrice" class="form-control" />
                 <span asp-validation-for="BasePrice" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mb-2">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+
+            <!-- ✅ Poster Upload -->
+            <div class="form-group mb-3">
+                <label class="control-label">Event Poster (optional)</label>
+                <input type="file" name="poster" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                <small class="text-muted">Allowed: JPG, PNG, WEBP (max 2MB)</small>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

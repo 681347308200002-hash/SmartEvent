@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using SmartEvent.Models;
 
 namespace SmartEvent.Data
 {
@@ -13,7 +14,7 @@ namespace SmartEvent.Data
         {
             // Get managers from DI
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
             // 1) Ensure roles exist
             string[] roles = { "Admin", "Member" };
@@ -35,12 +36,15 @@ namespace SmartEvent.Data
             var adminUser = await userManager.FindByEmailAsync(AdminEmail);
             if (adminUser == null)
             {
-                adminUser = new IdentityUser
+                adminUser = new ApplicationUser
                 {
                     UserName = AdminEmail,
                     Email = AdminEmail,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    FullName = "System Admin",
+                    EventPreferences = ""
                 };
+
 
                 var userResult = await userManager.CreateAsync(adminUser, AdminPassword);
                 if (!userResult.Succeeded)

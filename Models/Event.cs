@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace SmartEvent.Models
 {
@@ -32,8 +33,15 @@ namespace SmartEvent.Models
         [StringLength(500)]
         public string Description { get; set; }
 
+        [StringLength(300)]
+        public string? PosterPath { get; set; }
+
         // Navigation properties
-        public ICollection<SeatType> SeatTypes { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        [ValidateNever]
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+        [ValidateNever]
+        public ICollection<SeatType> SeatTypes { get; set; } = new List<SeatType>();
+
     }
 }

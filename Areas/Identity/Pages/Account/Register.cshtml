@@ -133,11 +133,18 @@
                     <div class="register-title">Create Account</div>
                     <div class="register-subtitle">Sign up to book tickets and manage your events easily.</div>
                     <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
                         <div class="form-floating mb-3 position-relative">
                             <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                             <label asp-for="Input.Email">Email</label>
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.FullName" class="form-control" />
+                            <label asp-for="Input.FullName"></label>
+                            <span asp-validation-for="Input.FullName" class="text-danger"></span>
                         </div>
                         <div class="form-floating mb-3 position-relative">
                             <input asp-for="Input.Password" class="form-control password-field" autocomplete="new-password" aria-required="true" placeholder="Password" />

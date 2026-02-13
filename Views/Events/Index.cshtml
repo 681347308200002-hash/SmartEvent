@@ -1,65 +1,68 @@
 ﻿@model IEnumerable<SmartEvent.Models.Event>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Events";
 }
 
-<h1>Index</h1>
+<h1>Events</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
+
+<table class="table table-striped align-middle">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.EventName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EventDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BasePrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
+            <th style="width:110px;">Poster</th>
+            <th>@Html.DisplayNameFor(model => model.First().EventName)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Category)</th>
+            <th>@Html.DisplayNameFor(model => model.First().EventDate)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Location)</th>
+            <th>@Html.DisplayNameFor(model => model.First().BasePrice)</th>
+            <th style="width:260px;">@Html.DisplayNameFor(model => model.First().Description)</th>
+            <th style="width:180px;"></th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BasePrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(item.PosterPath))
+                    {
+                        <img src="@item.PosterPath"
+                             alt="Poster"
+                             style="width:90px;height:90px;object-fit:cover;border-radius:8px;" />
+                    }
+                    else
+                    {
+                        <div style="width:90px;height:90px;border:1px solid #ccc;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;">
+                            No image
+                        </div>
+                    }
+                </td>
+
+                <td>@item.EventName</td>
+                <td>@item.Category</td>
+                <td>@item.EventDate.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.Location</td>
+                <td>@item.BasePrice.ToString("0.00")</td>
+
+                <td>
+                    @{
+                        var desc = item.Description ?? "";
+                        if (desc.Length > 80) { desc = desc.Substring(0, 80) + "..."; }
+                    }
+                    @desc
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.EventId" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

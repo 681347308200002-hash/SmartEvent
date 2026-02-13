@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartEvent.Data;
-
+using SmartEvent.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,10 +15,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //  Add Roles support (default Identity + roles)
 builder.Services
-    .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>() // IMPORTANT
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
+    .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
