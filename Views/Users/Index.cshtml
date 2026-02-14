@@ -1,0 +1,59 @@
+﻿@model List<SmartEvent.Controllers.Admin.UserRowVM>
+
+@{
+    ViewData["Title"] = "Membership Accounts";
+}
+
+<h2>Membership Accounts</h2>
+
+<form method="get" class="mb-3">
+    <input name="q" value="@ViewBag.Query" placeholder="Search email or username" />
+    <button type="submit">Search</button>
+    <a asp-action="Index">Clear</a>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Roles</th>
+            <th>Status</th>
+            <th style="width:260px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            var isLocked = u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTimeOffset.UtcNow;
+            <tr>
+                <td>@u.Email</td>
+                <td>@u.UserName</td>
+                <td>@string.Join(", ", u.Roles)</td>
+                <td>
+                    @if (isLocked)
+                    {
+                        <span>Locked</span>
+                    }
+                    else
+                    {
+                        <span>Active</span>
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@u.Id">Edit</a>
+
+                    <form asp-action="Lock" asp-route-id="@u.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-sm btn-warning" type="submit">Lock</button>
+                    </form>
+
+                    <form asp-action="Unlock" asp-route-id="@u.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-sm btn-success" type="submit">Unlock</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

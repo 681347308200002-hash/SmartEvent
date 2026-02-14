@@ -102,7 +102,7 @@ namespace SmartEvent.Controllers
 
             _context.Events.Add(@event);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Create", "SeatTypes", new { eventId = @event.EventId });
         }
 
         // GET: Events/Edit/5

@@ -1,42 +1,37 @@
 ﻿@model SmartEvent.Models.SeatType
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Seat Type Details";
 }
 
-<h1>Details</h1>
+<h1>Seat Type Details</h1>
 
 <div>
-    <h4>SeatType</h4>
+    <h4>Seat Type</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TypeName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TypeName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.QuantityAvailable)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.QuantityAvailable)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Event)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Event.Category)
-        </dd>
+        <dt class="col-sm-2">Type</dt>
+        <dd class="col-sm-10">@Model.TypeName</dd>
+
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">@Model.Price.ToString("0.00")</dd>
+
+        <dt class="col-sm-2">Quantity Available</dt>
+        <dd class="col-sm-10">@Model.QuantityAvailable</dd>
+
+        <dt class="col-sm-2">Event</dt>
+        <dd class="col-sm-10">@((Model.Event?.EventName) ?? "-")</dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.SeatTypeId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.SeatTypeId" class="btn btn-warning">Edit</a>
+
+    <a asp-action="Index" asp-route-eventId="@Model.EventId"
+       class="btn btn-secondary ms-2">Back to Seat Types</a>
+
+    <a asp-controller="Events"
+       asp-action="Details"
+       asp-route-id="@Model.EventId"
+       class="btn btn-outline-secondary ms-2">Back to Event</a>
 </div>

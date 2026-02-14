@@ -61,6 +61,16 @@
                     <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-sm btn-warning">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.EventId" class="btn btn-sm btn-info">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-sm btn-danger">Delete</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-secondary"
+                           asp-controller="SeatTypes"
+                           asp-action="Index"
+                           asp-route-eventId="@item.EventId">
+                            Seat Types
+                        </a>
+                    }
+
                 </td>
             </tr>
         }

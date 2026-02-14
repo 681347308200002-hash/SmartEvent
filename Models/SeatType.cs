@@ -25,6 +25,6 @@ namespace SmartEvent.Models
         public int EventId { get; set; }
 
         // Navigation
-        public Event Event { get; set; }
+        public Event? Event { get; set; }
     }
 }

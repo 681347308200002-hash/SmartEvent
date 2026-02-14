@@ -1,8 +1,37 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<SmartEvent.Models.Event>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h2 class="mb-3">Events</h2>
+
+<div class="row g-3">
+    @foreach (var e in Model)
+    {
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <img class="card-img-top"
+                     src="@(string.IsNullOrEmpty(e.PosterPath) ? "/images/no-poster.png" : e.PosterPath)"
+                     style="height:220px; object-fit:cover;"
+                     alt="Poster" />
+
+                <div class="card-body">
+                    <div class="fw-bold">@e.EventName</div>
+                    <div class="text-muted small">@e.EventDate.ToString("yyyy-MM-dd HH:mm")</div>
+                    <div class="small">@e.Category</div>
+                    <div class="small">@e.Location</div>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 pb-3">
+                    <a class="btn btn-sm btn-primary"
+                       asp-controller="Events"
+                       asp-action="Details"
+                       asp-route-id="@e.EventId">
+                        View
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
 </div>

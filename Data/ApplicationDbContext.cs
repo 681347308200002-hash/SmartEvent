@@ -15,6 +15,9 @@ namespace SmartEvent.Data
         public DbSet<SeatType> SeatTypes { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
+        public DbSet<TicketPurchase> TicketPurchases { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -26,6 +29,24 @@ namespace SmartEvent.Data
             builder.Entity<SeatType>()
                 .Property(s => s.Price)
                 .HasPrecision(10, 2);
+
+            builder.Entity<TicketPurchase>()
+                .HasOne(tp => tp.Event)
+                .WithMany()
+                .HasForeignKey(tp => tp.EventId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<TicketPurchase>()
+                .HasOne(tp => tp.SeatType)
+                .WithMany()
+                .HasForeignKey(tp => tp.SeatTypeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<TicketPurchase>()
+                .HasOne(tp => tp.User)
+                .WithMany()
+                .HasForeignKey(tp => tp.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
     }
