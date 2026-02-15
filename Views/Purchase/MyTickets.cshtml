@@ -1,0 +1,52 @@
+﻿@using QRCoder
+@using System.Drawing
+@using System.Drawing.Imaging
+@using System.IO
+@model List<SmartEvent.Models.TicketPurchase>
+
+
+<h2>My Tickets</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Event</th>
+            <th>Seat Type</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Date</th>
+            <th>QR Code</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.Event?.EventName</td>
+                <td>@t.SeatType?.TypeName</td>
+                <td>@t.Quantity</td>
+                <td>@t.TotalPrice USD</td>
+                <td>@t.PurchasedAt.ToLocalTime()</td>
+                <td>
+                    @{
+                        using var qrGenerator = new QRCodeGenerator();
+                        var qrText = Url.Action(
+                        "Verify",
+                        "Tickets",
+                        new { code = t.QrCodeValue },
+                        protocol: Context.Request.Scheme
+                        ) ?? "";
+
+                        using var qrData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+
+                        var qrCode = new PngByteQRCode(qrData);
+                        byte[] qrBytes = qrCode.GetGraphic(20);
+                        var base64 = Convert.ToBase64String(qrBytes);
+                    }
+
+                    <img src="data:image/png;base64,@base64" width="120" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

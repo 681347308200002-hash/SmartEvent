@@ -1,0 +1,20 @@
+﻿@model SmartEvent.Models.TicketPurchase
+
+<h2>Purchase Successful ✅</h2>
+
+<div class="card p-3">
+    <h4>@Model.Event?.EventName</h4>
+    <div><b>Date:</b> @Model.Event?.EventDate</div>
+    <div><b>Location:</b> @Model.Event?.Location</div>
+    <div><b>Seat Type:</b> @Model.SeatType?.TypeName</div>
+    <div><b>Quantity:</b> @Model.Quantity</div>
+    <div><b>Total:</b> @Model.TotalPrice</div>
+
+    <hr />
+    <div><b>Ticket Code:</b> @Model.QrCodeValue</div>
+
+    <div class="mt-3">
+        <a class="btn btn-primary" asp-action="MyTickets">Go to My Tickets</a>
+        <a class="btn btn-secondary ms-2" asp-controller="Home" asp-action="Index">Back to Home</a>
+    </div>
+</div>

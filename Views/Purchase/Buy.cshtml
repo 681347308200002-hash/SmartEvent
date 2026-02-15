@@ -1,0 +1,36 @@
+﻿@model SmartEvent.Models.Event
+
+<h2>Buy Ticket - @Model.EventName</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<form asp-action="Buy" method="post">
+    <input type="hidden" name="eventId" value="@Model.EventId" />
+
+    <div class="mb-3">
+        <label>Select Seat Type</label>
+        <select name="seatTypeId" class="form-control" required>
+            @foreach (var seat in Model.SeatTypes)
+            {
+                <option value="@seat.SeatTypeId">
+                    @seat.TypeName - @seat.Price USD
+                    (Available: @seat.QuantityAvailable)
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Quantity</label>
+        <input type="number" name="quantity" min="1" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Purchase
+    </button>
+</form>

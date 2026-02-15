@@ -14,15 +14,18 @@ namespace SmartEvent.Models
         public int Rating { get; set; }
 
         [StringLength(500)]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
-        public DateTime ReviewDate { get; set; } = DateTime.Now;
+        public DateTime ReviewDate { get; set; } = DateTime.UtcNow;
 
         // Foreign Key
+        [Required]
         public int EventId { get; set; }
 
+        [Required]
+        public string UserId { get; set; } = "";
+
         // Navigation
-        public Event Event { get; set; }
+        public Event? Event { get; set; }
     }
 }
-

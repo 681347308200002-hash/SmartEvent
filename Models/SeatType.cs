@@ -20,6 +20,11 @@ namespace SmartEvent.Models
         [Range(0, 10000)]
         public int QuantityAvailable { get; set; }
 
+        [Required]
+        [Range(0, 100000)]
+        public int AvailableSeats { get; set; }   // remaining seats
+
+
         // Foreign Key
         [ForeignKey("Event")]
         public int EventId { get; set; }

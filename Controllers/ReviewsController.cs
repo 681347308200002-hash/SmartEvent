@@ -7,17 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SmartEvent.Data;
 using SmartEvent.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace SmartEvent.Controllers
 {
-
+    [Authorize(Roles = "Member")]
     public class ReviewsController : Controller
+
     {
         private readonly ApplicationDbContext _context;
-
-        public ReviewsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ReviewsController(ApplicationDbContext context,
+                         UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Reviews
@@ -46,29 +52,67 @@ namespace SmartEvent.Controllers
             return View(review);
         }
 
-        // GET: Reviews/Create
-        public IActionResult Create()
+        // GET: Reviews/Create/5  (5 = EventId)
+        public async Task<IActionResult> Create(int eventId)
         {
-            ViewData["EventId"] = new SelectList(_context.Events, "EventId", "Category");
+            var user = await _userManager.GetUserAsync(User);
+
+            // Check if member purchased this event
+            bool purchased = await _context.TicketPurchases
+                .AnyAsync(t => t.EventId == eventId && t.UserId == user!.Id);
+
+            if (!purchased)
+            {
+                return Forbid(); // cannot review without buying ticket
+            }
+
+            ViewBag.EventId = eventId;
             return View();
         }
+
 
         // POST: Reviews/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReviewId,Rating,Comment,ReviewDate,EventId")] Review review)
+        public async Task<IActionResult> Create(int eventId, int rating, string comment)
         {
-            if (ModelState.IsValid)
+            var user = await _userManager.GetUserAsync(User);
+
+            bool purchased = await _context.TicketPurchases
+                .AnyAsync(t => t.EventId == eventId && t.UserId == user!.Id);
+
+            if (!purchased)
             {
-                _context.Add(review);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Forbid();
             }
-            ViewData["EventId"] = new SelectList(_context.Events, "EventId", "Category", review.EventId);
-            return View(review);
+
+            // Prevent duplicate review by same user
+            bool alreadyReviewed = await _context.Reviews
+                .AnyAsync(r => r.EventId == eventId && r.UserId == user!.Id);
+
+            if (alreadyReviewed)
+            {
+                TempData["Error"] = "You already reviewed this event.";
+                return RedirectToAction("Details", "Events", new { id = eventId });
+            }
+
+            var review = new Review
+            {
+                EventId = eventId,
+                UserId = user!.Id,
+                Rating = rating,
+                Comment = comment,
+                ReviewDate = DateTime.UtcNow
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Events", new { id = eventId });
         }
+
 
         // GET: Reviews/Edit/5
         public async Task<IActionResult> Edit(int? id)

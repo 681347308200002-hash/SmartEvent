@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartEvent.Data;
@@ -16,12 +17,16 @@ namespace SmartEvent.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly UserManager<ApplicationUser> _userManager;
+       
+
 
         // ✅ Only ONE constructor (fixes "Multiple constructors..." DI error)
-        public EventsController(ApplicationDbContext context, IWebHostEnvironment env)
+        public EventsController(ApplicationDbContext context, IWebHostEnvironment env, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _env = env;
+            _userManager = userManager;
         }
 
         // GET: Events
@@ -35,11 +40,39 @@ namespace SmartEvent.Controllers
         {
             if (id == null) return NotFound();
 
-            var @event = await _context.Events.FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null) return NotFound();
+            var eventData = await _context.Events
+                .Include(e => e.Reviews)
+                .FirstOrDefaultAsync(e => e.EventId == id);
 
-            return View(@event);
+            if (eventData == null) return NotFound();
+
+
+            if (User.IsInRole("Member"))
+            {
+                var userId = _userManager.GetUserId(User);
+
+                ViewBag.AlreadyReviewed = await _context.Reviews
+                    .AnyAsync(r => r.EventId == eventData.EventId && r.UserId == userId);
+            }
+
+            if (User.Identity?.IsAuthenticated == true && User.IsInRole("Member"))
+            {
+                var userId = _userManager.GetUserId(User);
+
+                ViewBag.HasPurchased = await _context.TicketPurchases
+                    .AnyAsync(t => t.EventId == eventData.EventId && t.UserId == userId);
+
+                ViewBag.AlreadyReviewed = await _context.Reviews
+                    .AnyAsync(r => r.EventId == eventData.EventId && r.UserId == userId);
+            }
+
+            return View(eventData);
+
+            
+
+
         }
+
 
         // GET: Events/Create
         [Authorize(Roles = "Admin")]

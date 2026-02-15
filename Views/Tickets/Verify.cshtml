@@ -1,0 +1,31 @@
+﻿@model SmartEvent.Models.TicketPurchase
+
+@{
+    bool limited = (ViewBag.Limited as bool?) == true;
+}
+
+<h2>Ticket Verification</h2>
+
+@if (limited)
+{
+    <div class="alert alert-warning">
+        Limited view. Admin can see full purchase details.
+    </div>
+}
+
+<div class="card p-3">
+    <h4>@Model.Event?.EventName</h4>
+    <div><b>Date:</b> @Model.Event?.EventDate</div>
+    <div><b>Location:</b> @Model.Event?.Location</div>
+    <div><b>Seat Type:</b> @Model.SeatType?.TypeName</div>
+    <div><b>Quantity:</b> @Model.Quantity</div>
+
+    @if (!limited)
+    {
+        <hr />
+        <div><b>Purchased At:</b> @Model.PurchasedAt.ToLocalTime()</div>
+        <div><b>Total Price:</b> @Model.TotalPrice</div>
+        <div><b>Ticket Code:</b> @Model.QrCodeValue</div>
+        <div><b>Buyer UserId:</b> @Model.UserId</div>
+    }
+</div>

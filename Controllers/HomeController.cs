@@ -21,15 +21,62 @@ namespace SmartEvent.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+    string? q,
+    string? category,
+    string? location,
+    decimal? minPrice,
+    decimal? maxPrice)
         {
-            var events = await _context.Events
+            var query = _context.Events.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                q = q.Trim();
+                query = query.Where(e => e.EventName.Contains(q));
+            }
+
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                query = query.Where(e => e.Category == category);
+            }
+
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                location = location.Trim();
+                query = query.Where(e => e.Location.Contains(location));
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(e => e.BasePrice >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(e => e.BasePrice <= maxPrice.Value);
+            }
+
+            var events = await query
                 .OrderBy(e => e.EventDate)
-                .Take(12)
                 .ToListAsync();
+
+            ViewBag.Categories = await _context.Events
+                .Select(e => e.Category)
+                .Distinct()
+                .ToListAsync();
+
+            ViewBag.Query = q;
+            ViewBag.SelectedCategory = category;
+            ViewBag.Location = location;
+            ViewBag.MinPrice = minPrice;
+            ViewBag.MaxPrice = maxPrice;
 
             return View(events);
         }
+
+
+
 
         public IActionResult Privacy()
         {

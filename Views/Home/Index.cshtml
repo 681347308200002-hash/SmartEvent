@@ -6,6 +6,59 @@
 
 <h2 class="mb-3">Events</h2>
 
+<!-- ✅ ADD SEARCH FORM HERE -->
+<form method="get" class="mb-4 d-flex flex-wrap" style="gap:10px;">
+
+    <input name="q"
+           value="@ViewBag.Query"
+           class="form-control"
+           style="max-width:250px;"
+           placeholder="Search events..." />
+
+    <select name="category" class="form-select" style="max-width:200px;">
+        <option value="">All Categories</option>
+
+        @foreach (var cat in ViewBag.Categories as List<string>)
+        {
+            <option value="@cat"
+                    selected="@(ViewBag.SelectedCategory == cat)">
+                @cat
+            </option>
+            
+
+        }
+    </select>
+
+    <input name="location"
+           value="@ViewBag.Location"
+           class="form-control"
+           style="max-width:220px;"
+           placeholder="Location..." />
+
+    <input name="minPrice"
+           type="number"
+           step="0.01"
+           value="@ViewBag.MinPrice"
+           class="form-control"
+           style="max-width:150px;"
+           placeholder="Min Price" />
+
+    <input name="maxPrice"
+           type="number"
+           step="0.01"
+           value="@ViewBag.MaxPrice"
+           class="form-control"
+           style="max-width:150px;"
+           placeholder="Max Price" />
+
+
+    <button class="btn btn-primary" type="submit">Filter</button>
+    <a class="btn btn-secondary" asp-action="Index">Clear</a>
+</form>
+
+
+
+<!-- Your existing event grid -->
 <div class="row g-3">
     @foreach (var e in Model)
     {
