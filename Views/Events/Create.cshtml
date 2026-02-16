@@ -1,72 +1,84 @@
 ﻿@model SmartEvent.Models.Event
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Event";
 }
 
-<h1>Create</h1>
-@if (TempData["ModelErrors"] != null)
-{
-    <div class="alert alert-danger">
-        <pre>@TempData["ModelErrors"]</pre>
-    </div>
-}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center py-4" style="border-radius: 0.8rem 0.8rem 0 0; background: var(--gradient-primary);">
+                    <h2 class="mb-0 fw-bold">Host a New Event</h2>
+                    <p class="mb-0 opacity-75">Fill in the details to create your event</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    
+                    @if (TempData["ModelErrors"] != null)
+                    {
+                        <div class="alert alert-danger shadow-sm">
+                            <pre class="mb-0">@TempData["ModelErrors"]</pre>
+                        </div>
+                    }
 
-<h4>Event</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <div class="form-group mb-2">
-                <label asp-for="EventName" class="control-label"></label>
-                <input asp-for="EventName" class="form-control" />
-                <span asp-validation-for="EventName" class="text-danger"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="EventName" class="form-control" placeholder="Event Name" />
+                            <label asp-for="EventName"></label>
+                            <span asp-validation-for="EventName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Category" class="form-control" placeholder="Category" />
+                            <label asp-for="Category"></label>
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="EventDate" class="form-control" type="datetime-local" placeholder="Date" />
+                                    <label asp-for="EventDate"></label>
+                                    <span asp-validation-for="EventDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="BasePrice" class="form-control" placeholder="Price" />
+                                    <label asp-for="BasePrice"></label>
+                                    <span asp-validation-for="BasePrice" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Location" class="form-control" placeholder="Location" />
+                            <label asp-for="Location"></label>
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Description" class="form-control" placeholder="Description" style="height: 100px"></textarea>
+                            <label asp-for="Description"></label>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted fw-bold small text-uppercase">Event Poster</label>
+                            <input type="file" name="poster" class="form-control form-control-lg" accept=".jpg,.jpeg,.png,.webp" />
+                            <div class="form-text">Allowed formats: JPG, PNG, WEBP (Max 2MB)</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold py-3 shadow-sm">Create Event</button>
+                            <a asp-action="Index" class="btn btn-light btn-lg text-muted fw-bold">Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="Category" class="control-label"></label>
-                <input asp-for="Category" class="form-control" />
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="EventDate" class="control-label"></label>
-                <input asp-for="EventDate" class="form-control" type="datetime-local" />
-                <span asp-validation-for="EventDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="BasePrice" class="control-label"></label>
-                <input asp-for="BasePrice" class="form-control" />
-                <span asp-validation-for="BasePrice" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <!-- ✅ Poster Upload -->
-            <div class="form-group mb-3">
-                <label class="control-label">Event Poster (optional)</label>
-                <input type="file" name="poster" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
-                <small class="text-muted">Allowed: JPG, PNG, WEBP (max 2MB)</small>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

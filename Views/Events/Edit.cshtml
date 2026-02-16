@@ -1,57 +1,89 @@
 ﻿@model SmartEvent.Models.Event
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Event";
 }
 
-<h1>Edit</h1>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-warning text-dark text-center py-4" style="border-radius: 0.8rem 0.8rem 0 0; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);">
+                    <h2 class="mb-0 fw-bold text-white">Edit Event</h2>
+                    <p class="mb-0 text-white opacity-75">Update event details</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    
+                    <form asp-action="Edit" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="EventId" />
+                        <input type="hidden" asp-for="PosterPath" /> <!-- Keep existing poster path -->
 
-<h4>Event</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="EventId" />
-            <div class="form-group">
-                <label asp-for="EventName" class="control-label"></label>
-                <input asp-for="EventName" class="form-control" />
-                <span asp-validation-for="EventName" class="text-danger"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="EventName" class="form-control" placeholder="Event Name" />
+                            <label asp-for="EventName"></label>
+                            <span asp-validation-for="EventName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Category" class="form-control" placeholder="Category" />
+                            <label asp-for="Category"></label>
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="EventDate" class="form-control" placeholder="Date" />
+                                    <label asp-for="EventDate"></label>
+                                    <span asp-validation-for="EventDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="BasePrice" class="form-control" placeholder="Price" />
+                                    <label asp-for="BasePrice"></label>
+                                    <span asp-validation-for="BasePrice" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Location" class="form-control" placeholder="Location" />
+                            <label asp-for="Location"></label>
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Description" class="form-control" placeholder="Description" />
+                            <label asp-for="Description"></label>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted fw-bold small text-uppercase">Update Poster (Optional)</label>
+                            
+                            @if (!string.IsNullOrEmpty(Model.PosterPath))
+                            {
+                                <div class="mb-2">
+                                    <img src="@Model.PosterPath" alt="Current Poster" class="img-thumbnail" style="height: 100px; object-fit: cover;" />
+                                    <span class="text-muted small ms-2">Current Poster</span>
+                                </div>
+                            }
+
+                            <input type="file" name="poster" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                            <div class="form-text">Leave blank to keep current poster. Allowed: JPG, PNG, WEBP (Max 2MB)</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold py-3 shadow-sm text-white">Save Changes</button>
+                            <a asp-action="Index" class="btn btn-light btn-lg text-muted fw-bold">Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <input asp-for="Category" class="form-control" />
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EventDate" class="control-label"></label>
-                <input asp-for="EventDate" class="form-control" />
-                <span asp-validation-for="EventDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BasePrice" class="control-label"></label>
-                <input asp-for="BasePrice" class="form-control" />
-                <span asp-validation-for="BasePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

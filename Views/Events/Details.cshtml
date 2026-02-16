@@ -9,107 +9,146 @@
 }
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.EventName;
 }
 
-<h1>Details</h1>
+<div class="container mt-5 mb-5">
+    
+    <!-- Hero / Header Card -->
+    <div class="card shadow-lg border-0 rounded-3 overflow-hidden mb-5">
+        <div class="row g-0">
+            <div class="col-md-5 bg-light position-relative" style="min-height: 400px;">
+                @if (!string.IsNullOrEmpty(Model.PosterPath))
+                {
+                    <img src="@Model.PosterPath" class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" alt="@Model.EventName">
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                        <div class="text-center">
+                            <i class="fas fa-image fa-4x mb-3 opacity-50"></i>
+                            <p>No Poster Available</p>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-7">
+                <div class="card-body p-4 p-lg-5 d-flex flex-column h-100">
+                    <div class="mb-auto">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary rounded-pill px-3 py-2 text-uppercase ls-1">@Model.Category</span>
+                            
+                             @if (Model.Reviews != null && Model.Reviews.Any())
+                            {
+                                var avg = Model.Reviews.Average(r => r.Rating);
+                                var avgRounded = (int)Math.Round(avg, MidpointRounding.AwayFromZero);
+                                <div class="text-warning" title="Average Rating: @avg.ToString("0.0")">
+                                    <span style="font-size: 1.2rem;">@Stars(avgRounded)</span>
+                                    <span class="text-dark small ms-1">(@Model.Reviews.Count)</span>
+                                </div>
+                            }
+                        </div>
 
-<div>
-    <h4>Event</h4>
+                        <h1 class="display-5 fw-bold mb-3">@Model.EventName</h1>
+                        
+                        <div class="d-flex align-items-center text-muted mb-3">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                            <span class="fs-5">@Model.EventDate.ToString("dddd, MMMM dd, yyyy")</span>
+                            <span class="mx-2">•</span>
+                            <i class="far fa-clock me-2 text-primary"></i>
+                            <span class="fs-5">@Model.EventDate.ToString("HH:mm")</span>
+                        </div>
 
-    @if (Model.Reviews != null && Model.Reviews.Any())
-    {
-        var avg = Model.Reviews.Average(r => r.Rating);
-        var avgRounded = (int)Math.Round(avg, MidpointRounding.AwayFromZero);
+                        <div class="d-flex align-items-center text-muted mb-4">
+                            <i class="fas fa-map-marker-alt me-2 text-danger"></i>
+                            <span class="fs-5">@Model.Location</span>
+                        </div>
 
-        <div class="mb-2">
-            <strong>Average Rating:</strong> @avg.ToString("0.0") / 5
-            <span style="font-size:18px;">@Stars(avgRounded)</span>
-            <span class="text-muted">(@Model.Reviews.Count review(s))</span>
+                        <h3 class="text-primary fw-bold mb-4">$@Model.BasePrice.ToString("0.00") <span class="text-muted fs-6 fw-normal">/ ticket</span></h3>
+                        
+                        <p class="lead text-muted mb-4">
+                            @Model.Description
+                        </p>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-top">
+                        <div class="d-flex flex-wrap gap-2">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-warning px-4 fw-bold" asp-action="Edit" asp-route-id="@Model.EventId">
+                                    <i class="fas fa-edit me-2"></i> Edit
+                                </a>
+                                <a class="btn btn-outline-secondary px-4 fw-bold" asp-controller="Events" asp-action="Index">
+                                    <i class="fas fa-arrow-left me-2"></i> Manage Events
+                                </a>
+                            }
+                            else if (User.IsInRole("Member"))
+                            {
+                                <a class="btn btn-primary btn-lg px-5 fw-bold shadow-sm" asp-controller="Purchase" asp-action="Buy" asp-route-id="@Model.EventId">
+                                    Get Tickets
+                                </a>
+                                @if (!(ViewBag.AlreadyReviewed ?? false) && (ViewBag.HasPurchased ?? false)) 
+                                {
+                                    <a class="btn btn-outline-warning btn-lg px-4 fw-bold" asp-controller="Reviews" asp-action="Create" asp-route-eventId="@Model.EventId">
+                                        Write Review
+                                    </a>
+                                }
+                                <a class="btn btn-outline-dark btn-lg px-4" asp-controller="Home" asp-action="Index">Back</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary btn-lg px-5 fw-bold shadow-sm" asp-controller="Purchase" asp-action="Buy" asp-route-id="@Model.EventId">
+                                    Get Tickets
+                                </a>
+                                <a class="btn btn-outline-dark btn-lg px-4" asp-controller="Home" asp-action="Index">Back</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    }
-    else
-    {
-        <p class="text-muted">No reviews yet.</p>
-    }
+    </div>
 
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.EventName)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.EventName)</dd>
+    <!-- Reviews Section -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="fw-bold m-0">Reviews</h3>
+                @if (User.IsInRole("Member") && (ViewBag.HasPurchased ?? false) && !(ViewBag.AlreadyReviewed ?? false))
+                {
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Reviews" asp-action="Create" asp-route-eventId="@Model.EventId">
+                        <i class="fas fa-pen me-1"></i> Write a Review
+                    </a>
+                }
+            </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Category)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Category)</dd>
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                <div class="row g-4">
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="text-warning">@Stars(review.Rating)</div>
+                                        <small class="text-muted">User Review</small>
+                                    </div>
+                                    <p class="card-text text-muted">"@review.Comment"</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 bg-light rounded-3">
+                    <i class="far fa-comment-dots fa-3x text-muted mb-3 opacity-50"></i>
+                    <p class="text-muted mb-0">No reviews yet. Be the first to share your experience!</p>
+                </div>
+            }
+        </div>
+    </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.EventDate)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.EventDate)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Location)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Location)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.BasePrice)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.BasePrice)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Description)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
-    </dl>
 </div>
-
-<div class="mt-3">
-    @if (User.IsInRole("Admin"))
-    {
-        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.EventId">Edit</a>
-    }
-
-    @if (User.IsInRole("Admin"))
-    {
-        <a class="btn btn-secondary ms-2" asp-controller="Events" asp-action="Index">← Back to Event List</a>
-    }
-    else
-    {
-        <a class="btn btn-primary ms-2" asp-controller="Home" asp-action="Index">← Back to Home</a>
-    }
-
-    @if (User.IsInRole("Member"))
-    {
-        <a class="btn btn-success ms-2" asp-controller="Purchase" asp-action="Buy" asp-route-id="@Model.EventId">
-            Buy Ticket
-        </a>
-
-        @if (!(ViewBag.AlreadyReviewed ?? false))
-        {
-            <a class="btn btn-warning ms-2" asp-controller="Reviews" asp-action="Create" asp-route-eventId="@Model.EventId">
-                Write Review
-            </a>
-        }
-    }
-</div>
-
-<hr />
-
-<h4>Reviews</h4>
-
-@if (User.IsInRole("Member"))
-{
-    if ((ViewBag.HasPurchased ?? false) && !(ViewBag.AlreadyReviewed ?? false))
-    {
-        <a class="btn btn-warning ms-2"
-           asp-controller="Reviews"
-           asp-action="Create"
-           asp-route-eventId="@Model.EventId">
-            Write Review
-        </a>
-    }
-    else if (!(ViewBag.HasPurchased ?? false))
-    {
-        <span class="text-muted ms-2">Purchase a ticket to write a review.</span>
-    }
-}
-else if (!(ViewBag.HasPurchased ?? false))
-{
-    <span class="text-muted ms-2">Purchase a ticket to write a review.</span>
-}
-else
-{
-    <p class="text-muted">No reviews yet.</p>
-}

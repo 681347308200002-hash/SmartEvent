@@ -4,87 +4,93 @@
     ViewData["Title"] = "Home";
 }
 
-<h2 class="mb-3">Events</h2>
-
-<!-- ✅ ADD SEARCH FORM HERE -->
-<form method="get" class="mb-4 d-flex flex-wrap" style="gap:10px;">
-
-    <input name="q"
-           value="@ViewBag.Query"
-           class="form-control"
-           style="max-width:250px;"
-           placeholder="Search events..." />
-
-    <select name="category" class="form-select" style="max-width:200px;">
-        <option value="">All Categories</option>
-
-        @foreach (var cat in ViewBag.Categories as List<string>)
-        {
-            <option value="@cat"
-                    selected="@(ViewBag.SelectedCategory == cat)">
-                @cat
-            </option>
-            
-
-        }
-    </select>
-
-    <input name="location"
-           value="@ViewBag.Location"
-           class="form-control"
-           style="max-width:220px;"
-           placeholder="Location..." />
-
-    <input name="minPrice"
-           type="number"
-           step="0.01"
-           value="@ViewBag.MinPrice"
-           class="form-control"
-           style="max-width:150px;"
-           placeholder="Min Price" />
-
-    <input name="maxPrice"
-           type="number"
-           step="0.01"
-           value="@ViewBag.MaxPrice"
-           class="form-control"
-           style="max-width:150px;"
-           placeholder="Max Price" />
-
-
-    <button class="btn btn-primary" type="submit">Filter</button>
-    <a class="btn btn-secondary" asp-action="Index">Clear</a>
-</form>
-
-
-
-<!-- Your existing event grid -->
-<div class="row g-3">
-    @foreach (var e in Model)
-    {
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="card h-100 shadow-sm">
-                <img class="card-img-top"
-                     src="@(string.IsNullOrEmpty(e.PosterPath) ? "/images/no-poster.png" : e.PosterPath)"
-                     style="height:220px; object-fit:cover;"
-                     alt="Poster" />
-
-                <div class="card-body">
-                    <div class="fw-bold">@e.EventName</div>
-                    <div class="text-muted small">@e.EventDate.ToString("yyyy-MM-dd HH:mm")</div>
-                    <div class="small">@e.Category</div>
-                    <div class="small">@e.Location</div>
-                </div>
-
-                <div class="card-footer bg-transparent border-0 pb-3">
-                    <a class="btn btn-sm btn-primary"
-                       asp-controller="Events"
-                       asp-action="Details"
-                       asp-route-id="@e.EventId">
-                        View
-                    </a>
-                </div>
-            </div>
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-content container">
+        <h1 class="hero-title">Experience More</h1>
+        <p class="hero-subtitle">Discover the best concerts, workshops, and events happening near you.</p>
+        <div class="d-flex justify-content-center gap-3">
+             <a href="#events-list" class="btn btn-primary btn-lg">Browse Events</a>
+             <a asp-controller="Events" asp-action="Create" class="btn btn-outline-light btn-lg">Host an Event</a>
         </div>
-    }
+    </div>
+</div>
+
+<div class="container" style="position: relative; z-index: 2;">
+    
+    <!-- Floating Search Bar -->
+    <div class="search-container mb-5">
+        <form method="get" class="search-form">
+            <div class="flex-grow-1">
+                <i class="fas fa-search text-muted position-absolute ms-3 mt-3"></i>
+                <input name="q" value="@ViewBag.Query" class="form-control ps-5" placeholder="Search events, artists..." />
+            </div>
+
+            <select name="category" class="form-select" style="max-width:200px;">
+                <option value="">All Categories</option>
+                @foreach (var cat in ViewBag.Categories as List<string>)
+                {
+                    <option value="@cat" selected="@(ViewBag.SelectedCategory == cat)">@cat</option>
+                }
+            </select>
+
+            <input name="location" value="@ViewBag.Location" class="form-control" style="max-width:200px;" placeholder="Location" />
+            
+            <div class="d-flex gap-2">
+                 <input name="minPrice" type="number" step="0.01" value="@ViewBag.MinPrice" class="form-control" style="max-width:100px;" placeholder="Min $" />
+                 <input name="maxPrice" type="number" step="0.01" value="@ViewBag.MaxPrice" class="form-control" style="max-width:100px;" placeholder="Max $" />
+            </div>
+
+            <button class="btn btn-primary" type="submit">Filter</button>
+            <a class="btn btn-link text-muted" asp-action="Index">Clear</a>
+        </form>
+    </div>
+
+    <!-- Events List -->
+    <div id="events-list" class="mb-5">
+        <h2 class="mb-4 fw-bold">Upcoming Events</h2>
+        
+        <div class="row g-4">
+            @foreach (var e in Model)
+            {
+                <div class="col-sm-6 col-lg-4 col-xl-3 event-card-wrapper">
+                    <div class="event-card">
+                        <div class="card-img-wrapper">
+                            <img class="card-img-top" 
+                                 src="@(string.IsNullOrEmpty(e.PosterPath) ? "/images/no-poster.png" : e.PosterPath)" 
+                                 alt="@e.EventName" />
+                            <div class="card-date-badge">
+                                <div style="font-size: 0.8rem; text-transform: uppercase;">@e.EventDate.ToString("MMM")</div>
+                                <div style="font-size: 1.5rem; line-height: 1;">@e.EventDate.Day</div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="event-meta">
+                                <i class="fas fa-map-marker-alt text-primary"></i> @e.Location
+                            </div>
+                            <h3 class="event-title text-truncate">@e.EventName</h3>
+                            <div class="event-meta">
+                                <span class="badge bg-light text-dark border">@e.Category</span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <div class="event-price">
+                                    Ticket
+                                </div>
+                                <a class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                   asp-controller="Events"
+                                   asp-action="Details"
+                                   asp-route-id="@e.EventId">
+                                    Get Tickets
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
 </div>

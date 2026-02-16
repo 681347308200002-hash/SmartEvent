@@ -1,31 +1,312 @@
+/* Modern Color Palette & Variables */
+:root {
+  --primary-color: #4f46e5;
+  --secondary-color: #818cf8;
+  --accent-color: #c7d2fe;
+  --dark-bg: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --text-dark: #1e293b;
+  --text-light: #f8fafc;
+  --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --font-main: 'Outfit', sans-serif;
+}
+
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
+  font-size: 16px;
   position: relative;
   min-height: 100%;
 }
 
 body {
+  font-family: var(--font-main);
+  background-color: #f1f5f9;
+  color: var(--text-dark);
   margin-bottom: 60px;
+  overflow-x: hidden;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Typography & General */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+a {
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Navbar Customization */
+.navbar {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand {
+  font-weight: 800;
+  color: var(--primary-color) !important;
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: var(--text-dark) !important;
+}
+
+.nav-link:hover {
+  color: var(--primary-color) !important;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  background: var(--dark-bg);
+  color: white;
+  padding: 3rem 0;
+  margin-top: -1.5rem;
+  /* Offset container padding if needed, adjust as per layout */
+  margin-bottom: 3rem;
+  border-radius: 0 0 3rem 3rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 50%, rgba(79, 70, 229, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(129, 140, 248, 0.4) 0%, transparent 50%);
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.8s ease-out;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #fff, #c7d2fe);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: #cbd5e1;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--gradient-primary);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+}
+
+/* Search Container */
+.search-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-lg);
+  margin-top: -3rem;
+  /* Overlap hero */
+  position: relative;
+  z-index: 10;
+  animation: slideUp 1s ease-out 0.2s backwards;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.search-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.1);
+}
+
+/* Event Cards */
+.event-card {
+  background: white;
+  border: none;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+  animation: fadeIn 0.6s ease-out backwards;
+}
+
+.event-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 220px;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.event-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.card-date-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.event-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.event-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.event-price {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+/* Staggered Animation Delay for Cards */
+.event-card-wrapper:nth-child(1) .event-card {
+  animation-delay: 0.1s;
+}
+
+.event-card-wrapper:nth-child(2) .event-card {
+  animation-delay: 0.2s;
+}
+
+.event-card-wrapper:nth-child(3) .event-card {
+  animation-delay: 0.3s;
+}
+
+.event-card-wrapper:nth-child(4) .event-card {
+  animation-delay: 0.4s;
+}
+
+.event-card-wrapper:nth-child(5) .event-card {
+  animation-delay: 0.1s;
+}
+
+/* Repeat pattern */
+.event-card-wrapper:nth-child(6) .event-card {
+  animation-delay: 0.2s;
+}
+
+/* Footer */
+footer {
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 4rem;
 }
