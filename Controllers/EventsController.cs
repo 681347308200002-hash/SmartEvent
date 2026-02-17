@@ -42,6 +42,7 @@ namespace SmartEvent.Controllers
 
             var eventData = await _context.Events
                 .Include(e => e.Reviews)
+                .Include(e => e.SeatTypes)
                 .FirstOrDefaultAsync(e => e.EventId == id);
 
             if (eventData == null) return NotFound();

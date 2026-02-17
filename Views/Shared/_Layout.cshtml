@@ -28,6 +28,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Member"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Purchase" asp-action="MyTickets">
+                                    My Tickets
+                                </a>
+                            </li>
+                        }
+
                         @if (User.IsInRole("Admin"))
 {
                             <li class="nav-item">

@@ -58,6 +58,7 @@ namespace SmartEvent.Controllers
             }
 
             var events = await query
+                .Include(e => e.SeatTypes)
                 .OrderBy(e => e.EventDate)
                 .ToListAsync();
 

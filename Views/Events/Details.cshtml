@@ -64,11 +64,44 @@
                             <span class="fs-5">@Model.Location</span>
                         </div>
 
-                        <h3 class="text-primary fw-bold mb-4">$@Model.BasePrice.ToString("0.00") <span class="text-muted fs-6 fw-normal">/ ticket</span></h3>
-                        
-                        <p class="lead text-muted mb-4">
-                            @Model.Description
-                        </p>
+                        @if (User.IsInRole("Member") || User.IsInRole("Admin"))
+                        {
+                            <h3 class="text-primary fw-bold mb-4">$@Model.BasePrice.ToString("0.00") <span class="text-muted fs-6 fw-normal">/ ticket</span></h3>
+                            
+                            <p class="lead text-muted mb-4">
+                                @Model.Description
+                            </p>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info border-0 shadow-sm rounded-3 py-3 mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="fas fa-info-circle fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1 fw-bold">Ticket Availability</h5>
+                                        @{
+                                            var totalAvailable = Model.SeatTypes?.Sum(s => s.QuantityAvailable) ?? 0;
+                                            if (totalAvailable > 0)
+                                            {
+                                                <span class="badge bg-success py-2 px-3"><i class="fas fa-check-circle me-1"></i> Available</span>
+                                                <p class="text-muted small mt-1 mb-0">Sign in to see pricing and seat details.</p>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger py-2 px-3"><i class="fas fa-times-circle me-1"></i> Sold Out</span>
+                                                <p class="text-muted small mt-1 mb-0">Check back later or explore other events.</p>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-muted mb-4 italic">
+                                <em>Register as a member to view full event details and book tickets.</em>
+                            </p>
+                        }
                     </div>
 
                     <div class="mt-4 pt-4 border-top">
@@ -97,8 +130,11 @@
                             }
                             else
                             {
-                                <a class="btn btn-primary btn-lg px-5 fw-bold shadow-sm" asp-controller="Purchase" asp-action="Buy" asp-route-id="@Model.EventId">
-                                    Get Tickets
+                                <a class="btn btn-primary btn-lg px-5 fw-bold shadow-sm" asp-area="Identity" asp-page="/Account/Register">
+                                    Register to Book
+                                </a>
+                                <a class="btn btn-outline-primary btn-lg px-4 fw-bold" asp-area="Identity" asp-page="/Account/Login">
+                                    Sign In
                                 </a>
                                 <a class="btn btn-outline-dark btn-lg px-4" asp-controller="Home" asp-action="Index">Back</a>
                             }

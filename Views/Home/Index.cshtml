@@ -77,14 +77,36 @@
                             
                             <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                                 <div class="event-price">
-                                    Ticket
+                                    @{
+                                        var totalAvailable = e.SeatTypes?.Sum(s => s.QuantityAvailable) ?? 0;
+                                        if (totalAvailable > 0)
+                                        {
+                                            <span class="badge bg-success small"><i class="fas fa-check-circle me-1"></i> Available</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger small"><i class="fas fa-times-circle me-1"></i> Full</span>
+                                        }
+                                    }
                                 </div>
-                                <a class="btn btn-sm btn-outline-primary rounded-pill px-3"
-                                   asp-controller="Events"
-                                   asp-action="Details"
-                                   asp-route-id="@e.EventId">
-                                    Get Tickets
-                                </a>
+                                @if (User.IsInRole("Member"))
+                                {
+                                    <a class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                       asp-controller="Events"
+                                       asp-action="Details"
+                                       asp-route-id="@e.EventId">
+                                        Get Tickets
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                                       asp-controller="Events"
+                                       asp-action="Details"
+                                       asp-route-id="@e.EventId">
+                                        View Details
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>

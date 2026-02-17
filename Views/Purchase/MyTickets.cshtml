@@ -30,22 +30,26 @@
                 <td>
                     @{
                         using var qrGenerator = new QRCodeGenerator();
-                        var qrText = Url.Action(
-                        "Verify",
-                        "Tickets",
-                        new { code = t.QrCodeValue },
-                        protocol: Context.Request.Scheme
-                        ) ?? "";
-
+                        var qrText = Url.Action("Verify", "Tickets", new { code = t.QrCodeValue }, protocol: Context.Request.Scheme) ?? "";
                         using var qrData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
-
                         var qrCode = new PngByteQRCode(qrData);
                         byte[] qrBytes = qrCode.GetGraphic(20);
                         var base64 = Convert.ToBase64String(qrBytes);
                     }
 
                     <img src="data:image/png;base64,@base64" width="120" />
+
+                    <div>
+                        <a class="btn btn-sm btn-outline-primary mt-2"
+                           asp-controller="Purchase"
+                           asp-action="DownloadQrPdf"
+                           asp-route-id="@t.TicketPurchaseId">
+                            Download PDF
+                        </a>
+                    </div>
                 </td>
+
+
             </tr>
         }
     </tbody>
