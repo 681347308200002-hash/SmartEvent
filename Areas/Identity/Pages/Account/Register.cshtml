@@ -158,6 +158,19 @@
                             <button type="button" class="btn btn-outline-secondary btn-sm position-absolute password-toggle" data-target="Input_ConfirmPassword" aria-label="Toggle password visibility">Show</button>
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
+
+                        <div class="mt-3">
+                            <div class="small text-muted mb-1">Password must contain:</div>
+                            <ul id="pwRules" class="small list-unstyled mb-0">
+                                <li id="ruleLength">✖ At least 8 characters</li>
+                                <li id="ruleUpper">✖ One uppercase letter (A-Z)</li>
+                                <li id="ruleLower">✖ One lowercase letter (a-z)</li>
+                                <li id="ruleNumber">✖ One number (0-9)</li>
+                                <li id="ruleSpecial">✖ One special character (!@@#$%^&*)</li>
+
+                            </ul>
+                        </div>
+
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Password strength</div>
                             <div class="progress" style="height:8px;">
@@ -262,9 +275,36 @@
             }
 
             if (pwInput) {
-                pwInput.addEventListener('input', updateStrength);
-                updateStrength();
+                        pwInput.addEventListener('input', function () {
+            updateStrength();
+            updateRules(pwInput.value);
+        });
+
+                    updateStrength();
+                    updateRules(val);
             }
         })();
+
+
+function updateRules(pw) {
+    function setRule(id, condition) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (condition) {
+            el.innerHTML = "✔ " + el.textContent.substring(2);
+            el.style.color = "green";
+        } else {
+            el.innerHTML = "✖ " + el.textContent.substring(2);
+            el.style.color = "red";
+        }
+    }
+
+    setRule("ruleLength", pw.length >= 8);
+    setRule("ruleUpper", /[A-Z]/.test(pw));
+    setRule("ruleLower", /[a-z]/.test(pw));
+    setRule("ruleNumber", /[0-9]/.test(pw));
+    setRule("ruleSpecial", /[^A-Za-z0-9]/.test(pw));
+}
+
     </script>
 }
