@@ -1,0 +1,104 @@
+﻿@model SmartEvent.ViewModels.InquiryCreateVM
+@{
+    ViewData["Title"] = "Send Inquiry";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="fw-bold mb-2">Send Inquiry</h1>
+                <p class="text-muted mb-0">
+                    Have a question about events or membership? Send us a message and we’ll get back to you.
+                </p>
+            </div>
+
+            <!-- Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+
+                    <form asp-action="Create" method="post" novalidate>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="EventId" />
+
+                        <!-- Name + Email -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Name" class="form-label fw-semibold">Name (optional)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">👤</span>
+                                    <input asp-for="Name" class="form-control" placeholder="Your name" />
+                                </div>
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">✉️</span>
+                                    <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="mt-3">
+                            <label asp-for="Subject" class="form-label fw-semibold">Subject</label>
+                            <div class="input-group">
+                                <span class="input-group-text">📝</span>
+                                <input asp-for="Subject" class="form-control" placeholder="e.g., Membership, ticket info, event details" />
+                            </div>
+                            <span asp-validation-for="Subject" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="mt-3">
+                            <label asp-for="Message" class="form-label fw-semibold">Message</label>
+                            <textarea asp-for="Message"
+                                      class="form-control"
+                                      rows="6"
+                                      placeholder="Write your question here..."></textarea>
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                <span asp-validation-for="Message" class="text-danger small"></span>
+                                <span class="text-muted small">Max 2000 characters</span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- Actions -->
+                        <div class="d-flex flex-wrap gap-2 justify-content-end">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                Submit Inquiry
+                            </button>
+                        </div>
+
+                        <!-- Helper text -->
+                        <div class="text-muted small mt-3">
+                            By submitting, you agree we may contact you via email regarding your inquiry.
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Extra: quick help box -->
+            <div class="alert alert-light border mt-4 mb-0">
+                <div class="fw-semibold mb-1">Tip</div>
+                <div class="text-muted small">
+                    If your question is about a specific event, include the event name and date in your message.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

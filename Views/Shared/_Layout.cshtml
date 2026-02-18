@@ -59,6 +59,24 @@
                                 <a class="nav-link" asp-controller="Events" asp-action="Index">Manage Events</a>
                             </li>
                         }
+                        @if (!User.Identity!.IsAuthenticated || User.IsInRole("Member"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Inquiries"
+                                   asp-action="Create">
+                                    Send Inquiry
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Admin/Inquiries/Index">
+                                    Inquiries
+                                </a>
+                            </li>
+                        }
 
 
                     </ul>

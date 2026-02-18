@@ -16,6 +16,7 @@ namespace SmartEvent.Data
         public DbSet<Review> Reviews { get; set; }
 
         public DbSet<TicketPurchase> TicketPurchases { get; set; }
+        public DbSet<Inquiry> Inquiries { get; set; } = default!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -1,0 +1,72 @@
+﻿@model SmartEvent.Models.Inquiry
+@{
+    ViewData["Title"] = "Inquiry Details";
+}
+
+<h2>Inquiry Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div class="mb-2"><strong>From:</strong> @(Model.Name ?? "(no name)")</div>
+        <div class="mb-2"><strong>Email:</strong> @Model.Email</div>
+        <div class="mb-2"><strong>Date:</strong> @Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div>
+        <div class="mb-2">
+            <strong>Status:</strong>
+            @if (Model.Status == SmartEvent.Models.InquiryStatus.Pending)
+            {
+                <span class="badge bg-warning text-dark">Pending</span>
+            }
+            else
+            {
+                <span class="badge bg-success">Replied</span>
+            }
+        </div>
+
+        @if (Model.Event != null)
+        {
+            <div class="mb-2"><strong>Event:</strong> @Model.Event.EventName</div>
+        }
+
+        <hr />
+
+        <div class="mb-2"><strong>Subject:</strong> @Model.Subject</div>
+        <div class="mt-3">
+            <strong>Message:</strong>
+            <div class="border rounded p-3 mt-2" style="white-space: pre-wrap;">
+                @Model.Message
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-outline-secondary" href="/Admin/Inquiries/Index">Back</a>
+
+            @if (Model.Status == SmartEvent.Models.InquiryStatus.Pending)
+            {
+                <form method="post" action="/Admin/Inquiries/MarkReplied/@Model.InquiryId">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-success" type="submit">Mark Replied</button>
+                </form>
+            }
+            else
+            {
+                <form method="post" action="/Admin/Inquiries/MarkPending/@Model.InquiryId">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-warning" type="submit">Mark Pending</button>
+                </form>
+            }
+
+            <form method="post" action="/Admin/Inquiries/Delete/@Model.InquiryId"
+                  onsubmit="return confirm('Delete this inquiry?');">
+                @Html.AntiForgeryToken()
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

@@ -1,36 +1,126 @@
 ﻿@model SmartEvent.Models.Event
-
-<h2>Buy Ticket - @Model.EventName</h2>
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
-    </div>
+@{
+    ViewData["Title"] = "Buy Ticket";
 }
 
-<form asp-action="Buy" method="post">
-    <input type="hidden" name="eventId" value="@Model.EventId" />
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
 
-    <div class="mb-3">
-        <label>Select Seat Type</label>
-        <select name="seatTypeId" class="form-control" required>
-            @foreach (var seat in Model.SeatTypes)
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="fw-bold mb-2">Buy Ticket</h1>
+                <p class="text-muted mb-0">
+                    Complete your booking for <span class="fw-semibold">@Model.EventName</span>.
+                </p>
+            </div>
+
+            @if (TempData["Error"] != null)
             {
-                <option value="@seat.SeatTypeId">
-                    @seat.TypeName - @seat.Price USD
-                    (Available: @seat.QuantityAvailable)
-                </option>
+                <div class="alert alert-danger shadow-sm">
+                    @TempData["Error"]
+                </div>
             }
-        </select>
-    </div>
 
-    <div class="mb-3">
-        <label>Quantity</label>
-        <input type="number" name="quantity" min="1" class="form-control" required />
-    </div>
+            <!-- Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
 
-    <button type="submit" class="btn btn-primary">
-        Purchase
-    </button>
-</form>
+                    <!-- Small summary box -->
+                    <div class="p-3 rounded bg-light border mb-4">
+                        <div class="d-flex justify-content-between flex-wrap gap-2">
+                            <div>
+                                <div class="text-muted small">Event</div>
+                                <div class="fw-semibold">@Model.EventName</div>
+                            </div>
+
+                            @* Optional: show date/location if you have these fields *@
+                            @* 
+                            <div>
+                                <div class="text-muted small">Date</div>
+                                <div class="fw-semibold">@Model.EventDate.ToString("yyyy-MM-dd")</div>
+                            </div>
+                            <div>
+                                <div class="text-muted small">Venue</div>
+                                <div class="fw-semibold">@Model.Location</div>
+                            </div>
+                            *@
+                        </div>
+                    </div>
+
+                    <form asp-action="Buy" method="post" novalidate>
+                        <input type="hidden" name="eventId" value="@Model.EventId" />
+
+                        <!-- Seat Type -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Select Seat Type</label>
+                            <div class="input-group">
+                                <span class="input-group-text">🎟️</span>
+                                <select name="seatTypeId" class="form-select" required>
+                                    @foreach (var seat in Model.SeatTypes)
+                                    {
+                                        var isFull = seat.QuantityAvailable <= 0;
+                                        <option value="@seat.SeatTypeId" disabled="@(isFull)">
+                                            @seat.TypeName - @seat.Price.ToString("0.00") USD
+                                            (Available: @seat.QuantityAvailable)
+                                            @(isFull ? " - FULL" : "")
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-text text-muted">
+                                Seat options show availability. Full seat types are disabled.
+                            </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Quantity</label>
+                            <div class="input-group">
+                                <span class="input-group-text">🔢</span>
+                                <input type="number"
+                                       name="quantity"
+                                       min="1"
+                                       value="1"
+                                       class="form-control"
+                                       required />
+                            </div>
+                            <div class="form-text text-muted">
+                                Choose how many tickets you want to purchase.
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- Buttons -->
+                        <div class="d-flex flex-wrap gap-2 justify-content-end">
+                            <a class="btn btn-outline-secondary"
+                               asp-controller="Events"
+                               asp-action="Details"
+                               asp-route-id="@Model.EventId">
+                                Back to Event
+                            </a>
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                Purchase
+                            </button>
+                        </div>
+
+                        <div class="text-muted small mt-3">
+                            After purchase, you can view your ticket in <span class="fw-semibold">My Tickets</span>.
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Extra help box -->
+            <div class="alert alert-light border mt-4 mb-0">
+                <div class="fw-semibold mb-1">Need help?</div>
+                <div class="text-muted small">
+                    If you have questions about seat types or payment, use the <span class="fw-semibold">Send Inquiry</span> page.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
